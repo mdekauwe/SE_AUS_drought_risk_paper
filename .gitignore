@@ -1,0 +1,6 @@
+*.nc
+*.png
+*.pdf
+PDSI/*.png
+PDSI/*.nc
+hydraulics_drought_modifiers/*.pdf
