@@ -2,17 +2,13 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-# function for clipping an input value between designated minimum and maximum
-#def clamp(min_val, x, max_val):
-#    return ( np.maximum(min_val, np.minimum(x, max_val)) )
+import os
 
 def standard_cable(theta, theta_wp, theta_fc):
     beta = (theta - theta_wp) / (theta_fc - theta_wp)
     beta = np.where(beta > 1.0, 1.0, beta)
     beta = np.where(beta < 0.0, 0.0, beta)
     return (beta)
-
 
 def fsig_tuzet(psi_leaf, sf, psi_f):
     """
@@ -115,15 +111,17 @@ if __name__ == "__main__":
     ax1 = fig.add_subplot(121)
     ax2 = fig.add_subplot(122)
 
-    ax1.plot(theta, beta_cable, label="$\Psi$$_{l}$")
+    ax1.plot(theta, beta_cable, label="$\Psi$$_{l}$", color="black")
     ax1.set_xlabel("Volumetric soil water content (m$^{3}$ m$^{-3}$)")
     ax1.set_ylabel("Water stress modifier (-)")
 
-    ax2.plot(psi, beta_leaf, label="$\Psi$$_{l}$", ls="-")
-    ax2.plot(psi, beta_stem, label="$\Psi$$_{x}$", ls="-")
+    ax2.plot(psi, beta_leaf, label="$\Psi$$_{l}$", ls="-", color="royalblue")
+    ax2.plot(psi, beta_stem, label="$\Psi$$_{x}$", ls="-", color="seagreen")
     ax2.set_xlabel("Water potential (MPa)")
     ax2.legend(numpoints=1, loc="best")
     plt.setp(ax2.get_yticklabels(), visible=False)
 
     plt.show()
-    fig.savefig("drought_modifers.pdf", bbox_inches='tight', pad_inches=0.1)
+    odir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
+    fig.savefig(os.path.join(odir, "drought_modifers.pdf"), bbox_inches='tight',
+                pad_inches=0.1)
