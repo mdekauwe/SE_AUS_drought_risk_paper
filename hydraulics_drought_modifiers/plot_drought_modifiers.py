@@ -118,8 +118,16 @@ if __name__ == "__main__":
     ax2.plot(psi, beta_leaf, label="$\Psi$$_{l}$", ls="-", color="royalblue")
     ax2.plot(psi, beta_stem, label="$\Psi$$_{x}$", ls="-", color="seagreen")
     ax2.set_xlabel("Water potential (MPa)")
-    ax2.legend(numpoints=1, loc="best")
+    ax2.legend(numpoints=1, loc=(0.03, 0.8), frameon=False)
     plt.setp(ax2.get_yticklabels(), visible=False)
+
+    props = dict(boxstyle='round', facecolor='white', alpha=0.0, ec="white")
+    ax1.text(0.02, 0.98, "(a)", transform=ax1.transAxes, fontsize=12,
+             verticalalignment='top', bbox=props)
+    props = dict(boxstyle='round', facecolor='white', alpha=0.0, ec="white")
+    ax2.text(0.02, 0.98, "(b)", transform=ax2.transAxes, fontsize=12,
+             verticalalignment='top', bbox=props)
+
 
     plt.show()
     odir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
