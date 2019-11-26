@@ -4,3 +4,11 @@
 PDSI/*.png
 PDSI/*.nc
 hydraulics_drought_modifiers/*.pdf
+P_minus_PET/*.nc
+single_site_cable_hydraulics/outputs/*
+single_site_cable_hydraulics/logs/*
+single_site_cable_hydraulics/namelists/*
+single_site_cable_hydraulics/restart_files/*
+single_site_cable_hydraulics/cable
+single_site_cable_hydraulics/__pycache__/*
+single_site_cable_hydraulics/*.nc

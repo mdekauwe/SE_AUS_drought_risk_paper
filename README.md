@@ -8,6 +8,10 @@ et al.
 
 Repository containing all the code to reproduce the results in De Kauwe et al. (20XX) Identifying areas at risk of drought-inducted tree mortality across South-Eastern Australia.
 
+Spatial analysis and plotting scripts are in:
+
+https://github.com/mdekauwe/Drought_analysis
+
 ## Datasets
 
 
