@@ -116,8 +116,10 @@ class RunCable(object):
                                    lai_dir=self.lai_dir)
 
             if self.fwsoil == "hydraulics":
-                #fname = change_iveg(fname, site, 2)
-                fname = change_iveg(fname, site, 19)
+                if site == "WombatStateForestOzFlux2":
+                    fname = change_iveg(fname, site, 20)
+                else:
+                    fname = change_iveg(fname, site, 19)
             elif self.fwsoil == "standard":
                 fname = change_iveg(fname, site, 2)
 
@@ -231,6 +233,7 @@ if __name__ == "__main__":
     #met_subset = ['GreatWesternWoodlandsOzFlux2.0_met.nc']
     # ------------------------------------------- #
 
+    """
     #
     ## Tumbarumba
     #
@@ -258,6 +261,7 @@ if __name__ == "__main__":
     site = met_subset[0].split(".")[0]
     out_fname = os.path.join(output_dir, "%s_out.nc" % (site))
     shutil.move(out_fname, os.path.join(output_dir, "hydraulics_tumba.nc"))
+    """
 
     #
     ## Wombat
