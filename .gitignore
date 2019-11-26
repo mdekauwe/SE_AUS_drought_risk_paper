@@ -13,3 +13,4 @@ single_site_cable_hydraulics/cable
 single_site_cable_hydraulics/__pycache__/*
 single_site_cable_hydraulics/*.nc
 PPT_percentiles/*.nc
+VOD_anomaly/*.nc
