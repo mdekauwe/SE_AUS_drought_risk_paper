@@ -120,7 +120,11 @@ def main(pet_fname, ppt_fname, plot_dir):
         ax.add_feature(states, edgecolor='black', lw=0.5)
 
     cbar = axgr.cbar_axes[0].colorbar(plims)
+<<<<<<< HEAD
     cbar.ax.set_title("P-PET\n(mm yr$^{-1}$)", fontsize=16, pad=12)
+=======
+    cbar.ax.set_title("P-PET\n(mm yr$^{-1}$)", fontsize=16)
+>>>>>>> 4b7f1bb77a0659d9209e9de5bb7982a2e8ed2dda
 
     ofname = os.path.join(plot_dir, "p_minus_pet_pre.png")
     fig.savefig(ofname, dpi=300, bbox_inches='tight',
@@ -139,8 +143,13 @@ def plot_map(ax, var, cmap, i, top, bottom, left, right):
     ax.coastlines(resolution='10m', linewidth=1.0, color='black')
     #ax.add_feature(cartopy.feature.OCEAN)
 
+<<<<<<< HEAD
     ax.set_xlim(140.7, 154)
     ax.set_ylim(-39.2, -28.1)
+=======
+    ax.set_xlim(140, 154)
+    ax.set_ylim(-39.4, -28)
+>>>>>>> 4b7f1bb77a0659d9209e9de5bb7982a2e8ed2dda
 
     if i == 0 or i >= 5:
 
