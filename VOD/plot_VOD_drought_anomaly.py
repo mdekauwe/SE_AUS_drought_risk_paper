@@ -25,55 +25,35 @@ from mpl_toolkits.axes_grid1 import AxesGrid
 
 def main(fname, plot_dir):
 
-    ds = xr.open_dataset(fname)
+    ds = xr.open_dataset(fname, decode_times=False)
     bottom, top = np.min(ds.latitude).values, np.max(ds.latitude).values
     left, right =np.min(ds.longitude).values, np.max(ds.longitude).values
 
-    ntime, nrows, ncols = ds.ndvi.shape
-
-
-    """
-    st_count = 0
-    for year in np.arange(1981, 2000):
-        for month in np.arange(1, 13):
-
-            if year > 1989 and year < 2000:
-                break
-            print(year, month, ds.time[count].values)
-            st_count += 1
-
-
-    print(st_count)
-    print(ds.time[count].values)
-
-    sys.exit()
-    """
-    st_count = 108 # 1990
+    ntime, nrows, ncols = ds.VOD.shape
 
     # Get baseline period
     # 1993-1999
-    nyears = 10
-    ndvi_pre = np.zeros((nyears,nrows,ncols))
-    vals = np.zeros((3,nrows,ncols)) # summer
+    nyears = 7
+    vod_pre = np.zeros((nyears,nrows,ncols))
+    vals = np.zeros((3,nrows,ncols))
     yr_count = 0
-    count = st_count
-    for year in np.arange(1990, 2000):
+    count = 0
+    for year in np.arange(1993, 2000):
         for month in np.arange(1, 13):
+
             if month == 12:
                 #vals = ds.VOD[count,:,:].values
                 #vals = np.where(np.isnan(vals), 0, vals)
-                ndvi_pre[yr_count,:,:] += ds.ndvi[count,:,:]
-                ndvi_pre[yr_count,:,:] += ds.ndvi[count+1,:,:]
-                ndvi_pre[yr_count,:,:] += ds.ndvi[count+2,:,:]
-                ndvi_pre[yr_count,:,:] /= 3
+                vod_pre[yr_count,:,:] += ds.VOD[count,:,:]
+                vod_pre[yr_count,:,:] += ds.VOD[count+1,:,:]
+                vod_pre[yr_count,:,:] += ds.VOD[count+2,:,:]
+                vod_pre[yr_count,:,:] /= 3
 
             count += 1
         yr_count += 1
 
-    ndvi_pre = np.mean(ndvi_pre, axis=0)
-    ndvi_pre = np.flipud(ndvi_pre)
-    ndvi_pre = np.where(ndvi_pre < 0.0, np.nan, ndvi_pre)
-
+    vod_pre = np.mean(vod_pre, axis=0)
+    vod_pre = np.flipud(vod_pre)
 
     # We will have incremented the counter by one too many on the final
     # iteration, fix this as we need to start at the right point for 2000
@@ -81,25 +61,24 @@ def main(fname, plot_dir):
 
     # 2000-2009
     nyears = 10
-    ndvi_dur = np.zeros((nyears,nrows,ncols))
+    vod_dur = np.zeros((nyears,nrows,ncols))
     yr_count = 0
     for year in np.arange(2000, 2010):
         for month in np.arange(1, 13):
 
             if month == 12:
-                ndvi_dur[yr_count,:,:] += ds.ndvi[count,:,:]
-                ndvi_dur[yr_count,:,:] += ds.ndvi[count+1,:,:]
-                ndvi_dur[yr_count,:,:] += ds.ndvi[count+2,:,:]
-                ndvi_dur[yr_count,:,:] /= 3
+                vod_dur[yr_count,:,:] += ds.VOD[count,:,:]
+                vod_dur[yr_count,:,:] += ds.VOD[count+1,:,:]
+                vod_dur[yr_count,:,:] += ds.VOD[count+2,:,:]
+                vod_dur[yr_count,:,:] /= 3
 
             count += 1
         yr_count += 1
 
-    ndvi_dur = np.mean(ndvi_dur, axis=0)
-    ndvi_dur = np.flipud(ndvi_dur)
-    ndvi_dur = np.where(ndvi_dur < 0.0, np.nan, ndvi_dur)
+    vod_dur = np.mean(vod_dur, axis=0)
+    vod_dur = np.flipud(vod_dur)
 
-    chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
+    chg = ((vod_dur - vod_pre) / vod_pre) * 100.0
 
     fig = plt.figure(figsize=(9, 6))
     plt.rcParams['font.family'] = "sans-serif"
@@ -139,18 +118,17 @@ def main(fname, plot_dir):
         ax.add_feature(states, edgecolor='black', lw=0.5)
 
     cbar = axgr.cbar_axes[0].colorbar(plims)
-    #cbar.ax.set_title("Percentage\ndifference(%)", fontsize=16)
     cbar.ax.set_title("Anomaly (%)", fontsize=16)
     #cbar.ax.set_yticklabels([' ', '-30', '-15', '0', '15', '<=70'])
 
-    ofname = os.path.join(plot_dir, "ndvi.png")
+    ofname = os.path.join(plot_dir, "vod.png")
     fig.savefig(ofname, dpi=300, bbox_inches='tight',
                 pad_inches=0.1)
 
 
 def plot_map(ax, var, cmap, i, top, bottom, left, right):
     print(np.nanmin(var), np.nanmax(var))
-    vmin, vmax = -30., 30.
+    vmin, vmax = -35., 35.
     #top, bottom = 89.8, -89.8
     #left, right = 0, 359.8
     img = ax.imshow(var, origin='lower',
@@ -195,6 +173,10 @@ def plot_map(ax, var, cmap, i, top, bottom, left, right):
 
 if __name__ == "__main__":
 
-    plot_dir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
-    fname = "ndvi3g_geo_v1_1_1981to2017_ndviMonMax_SE_AUS.nc"
+    plot_dir = "plots"
+    if not os.path.exists(plot_dir):
+        os.makedirs(plot_dir)
+
+    #fname = "raw/Australia_VOD_monthly_1993_2012_masked_gapfilled.nc"
+    fname = "raw/Australia_VOD_monthly_1993_2012_non-masked_gapfilled_no_missing.nc"
     main(fname, plot_dir)
