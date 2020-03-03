@@ -140,7 +140,7 @@ def main(fname, plot_dir):
 
     cbar = axgr.cbar_axes[0].colorbar(plims)
     #cbar.ax.set_title("Percentage\ndifference(%)", fontsize=16)
-    cbar.ax.set_title("Anomaly (%)", fontsize=16)
+    cbar.ax.set_title("% Difference", fontsize=16, pad=10)
     #cbar.ax.set_yticklabels([' ', '-30', '-15', '0', '15', '<=70'])
 
     ofname = os.path.join(plot_dir, "ndvi.png")
