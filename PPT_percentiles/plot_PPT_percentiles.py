@@ -74,7 +74,7 @@ def main(fname, plot_dir):
     #norm = colors.BoundaryNorm(bounds, cmap.N)
     #cbar = axgr.cbar_axes[0].colorbar(plims, norm=norm, boundaries=bounds, ticks=bounds)
     cbar = axgr.cbar_axes[0].colorbar(plims)
-    cbar.ax.set_title("Percentile", fontsize=16)
+    cbar.ax.set_title("Percentile", fontsize=16, pad=10)
 
     #for i, cax in enumerate(axgr.cbar_axes):
     #    cax.set_yticks([0.5, 5, 15, 25, 50, 75, 85, 94.5, 99.5])
@@ -107,7 +107,7 @@ def plot_map(ax, var, year, cmap, i, top, bottom, left, right):
 
     ax.coastlines(resolution='10m', linewidth=1.0, color='black')
     #ax.add_feature(cartopy.feature.OCEAN)
-    ax.set_title("%d-%d" % (year-1, year), fontsize=16)
+    ax.set_title("%d$-$%d" % (year-1, year), fontsize=16)
     ax.set_xlim(140.7, 154)
     ax.set_ylim(-39.2, -28.1)
 
