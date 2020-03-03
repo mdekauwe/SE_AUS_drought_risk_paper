@@ -128,7 +128,7 @@ def main(fname, plot_dir):
 
 def plot_map(ax, var, cmap, i, top, bottom, left, right):
     print(np.nanmin(var), np.nanmax(var))
-    vmin, vmax = -35., 35.
+    vmin, vmax = -40., 40.
     #top, bottom = 89.8, -89.8
     #left, right = 0, 359.8
     img = ax.imshow(var, origin='lower',
