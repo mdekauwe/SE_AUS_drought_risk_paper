@@ -118,7 +118,7 @@ def main(fname, plot_dir):
         ax.add_feature(states, edgecolor='black', lw=0.5)
 
     cbar = axgr.cbar_axes[0].colorbar(plims)
-    cbar.ax.set_title("Anomaly (%)", fontsize=16)
+    cbar.ax.set_title("% Difference", fontsize=16, pad=10)
     #cbar.ax.set_yticklabels([' ', '-30', '-15', '0', '15', '<=70'])
 
     ofname = os.path.join(plot_dir, "vod.png")
