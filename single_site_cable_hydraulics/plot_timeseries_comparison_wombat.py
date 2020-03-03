@@ -20,6 +20,7 @@ import datetime
 import os
 import glob
 from optparse import OptionParser
+import string
 
 def main(site, met_fname, flux_fname, fname1, fname2, plot_fname=None):
 
@@ -49,6 +50,7 @@ def main(site, met_fname, flux_fname, fname1, fname2, plot_fname=None):
 
 
     colours = plt.cm.Set2(np.linspace(0, 1, 7))
+    labels_gen = label_generator('lower', start="(", end=")")
 
     ax1 = fig.add_subplot(2,1,1)
     ax2 = fig.add_subplot(2,1,2)
@@ -58,27 +60,48 @@ def main(site, met_fname, flux_fname, fname1, fname2, plot_fname=None):
     axes = [ax1, ax2,]
     axes2 = [axx1, axx2,]
     vars = ["GPP", "Qle"]
+
+    props = dict(boxstyle='round', facecolor='white', alpha=1.0,
+                 ec="white")
+
     for a, x, v in zip(axes, axes2, vars):
 
-        a.plot(df_flx[v].index.to_pydatetime(), df_flx[v].rolling(window=7).mean(), c=colours[1], lw=2.0,
-            ls="-", label="Observations")
-        a.plot(df1[v].index.to_pydatetime(), df1[v].rolling(window=7).mean(), c=colours[0],
-               lw=1.5, ls="-", label="Control")
-        a.plot(df2[v].index.to_pydatetime(), df2[v].rolling(window=7).mean(), c=colours[2],
-               lw=1.5, ls="-", label="Hydraulics")
+        a.plot(df_flx[v].index.to_pydatetime(),
+               df_flx[v].rolling(window=5).mean(), c=colours[1], lw=2.0,
+               ls="-", label="Observations")
+        a.plot(df1[v].index.to_pydatetime(), df1[v].rolling(window=5).mean(),
+               c=colours[0], lw=1.5, ls="-", label="Control")
+        a.plot(df2[v].index.to_pydatetime(), df2[v].rolling(window=5).mean(),
+               c=colours[2], lw=1.5, ls="-", label="Hydraulics")
 
         x.bar(df_met.index, df_met["Rainf"], alpha=0.3, color="black")
+
+        fig_label = "%s" % (next(labels_gen))
+        a.text(0.02, 0.95, fig_label,
+                transform=a.transAxes, fontsize=14, verticalalignment='top',
+                bbox=props)
+
+    ax1.set_ylim(0, 12)
     ax2.set_ylim(0, 150)
+
+
+    axx1.set_yticks([0, 15, 30])
+    axx2.set_yticks([0, 15, 30])
+
     labels = ["GPP (g C m$^{-2}$ d$^{-1}$)", "LE (W m$^{-2}$)"]
     for a, l in zip(axes, labels):
         a.set_ylabel(l, fontsize=12)
 
-    for x, l in zip(axes2, labels):
-        x.set_ylabel("Rainfall (mm d$^{-1}$)", fontsize=12)
+    axx1.set_ylabel("Rainfall (mm d$^{-1}$)", fontsize=12, position=(0.5, 0.0))
 
+    from matplotlib.ticker import MaxNLocator
+    ax1.yaxis.set_major_locator(MaxNLocator(5))
+    ax2.yaxis.set_major_locator(MaxNLocator(5))
+    #axx1.yaxis.set_major_locator(MaxNLocator(3))
+    #axx2.yaxis.set_major_locator(MaxNLocator(3))
 
     plt.setp(ax1.get_xticklabels(), visible=False)
-    ax1.legend(numpoints=1, loc="best")
+    ax1.legend(numpoints=1, loc="best", frameon=False)
 
 
     for a in axes:
@@ -158,8 +181,12 @@ def resample_timestep(df, type=None):
     return df
 
 
-    return dates
+def label_generator(case='lower', start='', end=''):
+    choose_type = {'lower': string.ascii_lowercase,
+                   'upper': string.ascii_uppercase}
+    generator = ('%s%s%s' %(start, letter, end) for letter in choose_type[case])
 
+    return generator
 if __name__ == "__main__":
 
     site = "WombatFluxnet"
