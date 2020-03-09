@@ -66,7 +66,6 @@ def main(src_ds):
     for year in np.arange(1983, 2000):
         for month in np.arange(1, 13):
 
-
             if month == 12:
 
                 print(year, month, count)
@@ -172,7 +171,7 @@ def main(src_ds):
     ax.text(0.95, 0.05, "(b)", transform=ax.transAxes, fontsize=12,
              verticalalignment='top', bbox=props)
 
-    ofname = os.path.join(plot_dir, "ndvi.png")
+    ofname = os.path.join(plot_dir, "ndvi_avhrr_md.png")
     fig.savefig(ofname, dpi=300, bbox_inches='tight',
                 pad_inches=0.1)
 
