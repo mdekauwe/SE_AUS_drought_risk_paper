@@ -95,7 +95,7 @@ def main(src_ds):
 
                 bottom, top = np.min(aus_lat), np.max(aus_lat)
                 left, right = np.min(aus_lon), np.max(aus_lon)
-                print(top, bottom, left, right)
+                #print(top, bottom, left, right)
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
                 ndvi_pre[yr_count,:,:] += aus
@@ -149,7 +149,7 @@ def main(src_ds):
 
     chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
 
-    print(chg.shape)
+    #print(chg.shape)
     chg.tofile("md_change.bin")
 
 
@@ -167,14 +167,14 @@ def main(src_ds):
 
             if month == 12:
 
-                print(year, month, count)
+                #print(year, month, count)
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count)
                 ndvi_pre[yr_count,:,:] += aus
 
                 bottom, top = np.min(aus_lat), np.max(aus_lat)
                 left, right = np.min(aus_lon), np.max(aus_lon)
-                print(top, bottom, left, right)
+                #print(top, bottom, left, right)
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
                 ndvi_pre[yr_count,:,:] += aus
@@ -196,7 +196,7 @@ def main(src_ds):
 
     # 2017-2019
     count = 421 # 2017
-    nyears = 3
+    nyears = 3 - 1
     ndvi_dur = np.zeros((nyears,nrows,ncols))
     yr_count = 0
     for year in np.arange(2017, 2020):
@@ -215,10 +215,10 @@ def main(src_ds):
 
                 ndvi_dur[yr_count,:,:] /= 3
 
-            if month == 12 and year == 2019:
+            #if month == 12 and year == 2019:
 
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count)
-                ndvi_dur[yr_count,:,:] += aus
+            #    (aus, aus_lat, aus_lon) = get_data(src_ds, count)
+            #    ndvi_dur[yr_count,:,:] += aus
 
                 #(aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
                 #ndvi_dur[yr_count,:,:] += aus
