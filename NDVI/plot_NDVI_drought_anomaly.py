@@ -65,17 +65,25 @@ def main(fname, plot_dir):
         for month in np.arange(1, 13):
             if month == 12:
 
-                #print(ds.time[count].values, ds.time[count+1].values, ds.time[count+2].values)
-                #print(st_count)
-                #sys.exit()
-                ndvi_pre[yr_count,:,:] += ds.ndvi[count-3,:,:]
-                ndvi_pre[yr_count,:,:] += ds.ndvi[count-2,:,:]
-                ndvi_pre[yr_count,:,:] += ds.ndvi[count-1,:,:]
-                ndvi_pre[yr_count,:,:] += ds.ndvi[count,:,:]
-                ndvi_pre[yr_count,:,:] += ds.ndvi[count+1,:,:]
-                ndvi_pre[yr_count,:,:] += ds.ndvi[count+2,:,:]
-                #ndvi_pre[yr_count,:,:] /= 3
-                ndvi_pre[yr_count,:,:] /= 6
+                ndvi_count = np.zeros((nrows,ncols))
+
+                dat = ds.ndvi[count,:,:]
+                dat = np.where(np.isnan(dat), 0.0, dat)
+                ndvi_count = np.where(dat > 0.0, ndvi_count+1, ndvi_count)
+                ndvi_pre[yr_count,:,:] += dat
+
+                dat = ds.ndvi[count+1,:,:]
+                dat = np.where(np.isnan(dat), 0.0, dat)
+                ndvi_count = np.where(dat > 0.0, ndvi_count+1, ndvi_count)
+                ndvi_pre[yr_count,:,:] += dat
+
+                dat = ds.ndvi[count+2,:,:]
+                dat = np.where(np.isnan(dat), 0.0, dat)
+                ndvi_count = np.where(dat > 0.0, ndvi_count+1, ndvi_count)
+                ndvi_pre[yr_count,:,:] += dat
+
+                ndvi_pre[yr_count,:,:] /= ndvi_count
+
 
             count += 1
         yr_count += 1
@@ -95,15 +103,25 @@ def main(fname, plot_dir):
             if month == 12:
                 print(ds.time[count].values, ds.time[count+1].values, ds.time[count+2].values)
 
-                ndvi_dur[yr_count,:,:] += ds.ndvi[count-3,:,:]
-                ndvi_dur[yr_count,:,:] += ds.ndvi[count-2,:,:]
-                ndvi_dur[yr_count,:,:] += ds.ndvi[count-1,:,:]
-                ndvi_dur[yr_count,:,:] += ds.ndvi[count,:,:]
-                ndvi_dur[yr_count,:,:] += ds.ndvi[count+1,:,:]
-                ndvi_dur[yr_count,:,:] += ds.ndvi[count+2,:,:]
-                #ndvi_dur[yr_count,:,:] /= 3
-                ndvi_dur[yr_count,:,:] /= 6
+                ndvi_count = np.zeros((nrows,ncols))
 
+                dat = ds.ndvi[count,:,:]
+                dat = np.where(np.isnan(dat), 0.0, dat)
+                ndvi_count = np.where(dat > 0.0, ndvi_count+1, ndvi_count)
+                ndvi_dur[yr_count,:,:] += dat
+
+                dat = ds.ndvi[count+1,:,:]
+                dat = np.where(np.isnan(dat), 0.0, dat)
+                ndvi_count = np.where(dat > 0.0, ndvi_count+1, ndvi_count)
+                ndvi_dur[yr_count,:,:] += dat
+
+                dat = ds.ndvi[count+2,:,:]
+                dat = np.where(np.isnan(dat), 0.0, dat)
+                ndvi_count = np.where(dat > 0.0, ndvi_count+1, ndvi_count)
+                ndvi_dur[yr_count,:,:] += dat
+
+                ndvi_dur[yr_count,:,:] /= ndvi_count
+            
             count += 1
         yr_count += 1
 
