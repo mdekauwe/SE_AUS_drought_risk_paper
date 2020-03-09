@@ -121,6 +121,10 @@ def main(fname, plot_dir):
     cbar.ax.set_title("% Difference", fontsize=16, pad=10)
     #cbar.ax.set_yticklabels([' ', '-30', '-15', '0', '15', '<=70'])
 
+    props = dict(boxstyle='round', facecolor='white', alpha=0.0, ec="white")
+    ax.text(0.95, 0.05, "(a)", transform=ax.transAxes, fontsize=12,
+             verticalalignment='top', bbox=props)
+
     ofname = os.path.join(plot_dir, "vod.png")
     fig.savefig(ofname, dpi=300, bbox_inches='tight',
                 pad_inches=0.1)
