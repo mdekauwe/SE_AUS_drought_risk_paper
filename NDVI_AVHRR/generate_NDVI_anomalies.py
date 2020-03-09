@@ -91,17 +91,21 @@ def main(src_ds):
                 print(year, month, count)
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_pre[yr_count,:,:] += aus
 
-                bottom, top = np.min(aus_lat), np.max(aus_lat)
-                left, right = np.min(aus_lon), np.max(aus_lon)
-                #print(top, bottom, left, right)
+                if yr_count  == 0:
+                    bottom, top = np.min(aus_lat), np.max(aus_lat)
+                    left, right = np.min(aus_lon), np.max(aus_lon)
+                    print(top, bottom, left, right)
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_pre[yr_count,:,:] += aus
 
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_pre[yr_count,:,:] += aus
 
                 ndvi_pre[yr_count,:,:] /= 3
@@ -128,13 +132,17 @@ def main(src_ds):
 
             if month == 12:
 
+                print(year, month, count)
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_dur[yr_count,:,:] += aus
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_dur[yr_count,:,:] += aus
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_dur[yr_count,:,:] += aus
 
                 ndvi_dur[yr_count,:,:] /= 3
@@ -167,20 +175,19 @@ def main(src_ds):
 
             if month == 12:
 
-                #print(year, month, count)
+                print(year, month, count)
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_pre[yr_count,:,:] += aus
 
-                bottom, top = np.min(aus_lat), np.max(aus_lat)
-                left, right = np.min(aus_lon), np.max(aus_lon)
-                #print(top, bottom, left, right)
-
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_pre[yr_count,:,:] += aus
 
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_pre[yr_count,:,:] += aus
 
                 ndvi_pre[yr_count,:,:] /= 3
@@ -204,13 +211,17 @@ def main(src_ds):
 
             if month == 12 and year < 2019:
 
+                print(year, month, count)
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_dur[yr_count,:,:] += aus
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_dur[yr_count,:,:] += aus
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
+                aus = np.where(np.isnan(aus), 0.0, aus)
                 ndvi_dur[yr_count,:,:] += aus
 
                 ndvi_dur[yr_count,:,:] /= 3
