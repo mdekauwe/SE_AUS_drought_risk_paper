@@ -15,3 +15,4 @@ single_site_cable_hydraulics/*.nc
 PPT_percentiles/*.nc
 VOD/*.nc
 NDVI/*.nc
+NDVI_AVHRR/*.tif
