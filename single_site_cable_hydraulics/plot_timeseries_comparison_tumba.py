@@ -21,6 +21,8 @@ import os
 import glob
 from optparse import OptionParser
 import string
+from summary_stats import rmse, bias, nash_sutcliffe, willmott_agreement_indx
+from scipy.stats import linregress
 
 def main(site, met_fname, flux_fname, fname1, fname2, plot_fname=None):
 
@@ -35,6 +37,28 @@ def main(site, met_fname, flux_fname, fname1, fname2, plot_fname=None):
 
     df_met = read_cable_file(met_fname, type="MET")
     df_met = resample_timestep(df_met, type="MET")
+
+    df1_drt = df1[(df1.index > '2006-11-1') & (df1.index <= '2007-4-1')]
+    df2_drt = df2[(df2.index > '2006-11-1') & (df2.index <= '2007-4-1')]
+    df_flx_drt = df_flx[(df_flx.index > '2006-11-1') & (df_flx.index <= '2007-4-1')]
+
+    print("LE - Control")
+    m = df1_drt.Qle.values
+    o = df_flx_drt.Qle.values
+    print("RMSE = %.2f" % rmse(m, o))
+    print("Nash-Sutcliffe Coefficient = %.2f" % nash_sutcliffe(m, o))
+    slope, intercept, r_value, p_value, std_err = linregress(m, o)
+    print("Pearson's r = %.2f" % (r_value))
+
+    print("\n")
+    print("LE - Hydraulics")
+    m = df2_drt.Qle.values
+    print("RMSE = %.2f" % rmse(m, o))
+    print("Nash-Sutcliffe Coefficient = %.2f" % nash_sutcliffe(m, o))
+    slope, intercept, r_value, p_value, std_err = linregress(m, o)
+    print("Pearson's r = %.2f" % (r_value))
+
+
 
     fig = plt.figure(figsize=(9,6))
     fig.subplots_adjust(hspace=0.1)
