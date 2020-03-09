@@ -31,41 +31,51 @@ def main(fname, plot_dir):
 
     ntime, nrows, ncols = ds.ndvi.shape
 
-
     """
     st_count = 0
-    for year in np.arange(1981, 2000):
-        for month in np.arange(1, 13):
+    for i in range(ntime):
+        year = int(str(ds.time[i].values)[0:4])
 
-            if year > 1989 and year < 2000:
-                break
-            print(year, month, ds.time[count].values)
-            st_count += 1
+        #if year == 1990:
+        if year == 1983:
+            break
+        print(year, ds.time[i].values)
+
+        st_count += 1
 
 
     print(st_count)
-    print(ds.time[count].values)
+    print(ds.time[st_count].values)
 
     sys.exit()
     """
-    st_count = 108 # 1990
+
+    #st_count = 6 # 1982
+    st_count = 18 # 1983
+    #st_count = 102 # 1990
 
     # Get baseline period
     # 1993-1999
-    nyears = 10
+    nyears = (1999 - 1983) + 1
     ndvi_pre = np.zeros((nyears,nrows,ncols))
     vals = np.zeros((3,nrows,ncols)) # summer
     yr_count = 0
     count = st_count
-    for year in np.arange(1990, 2000):
+    for year in np.arange(1983, 2000):
         for month in np.arange(1, 13):
             if month == 12:
-                #vals = ds.VOD[count,:,:].values
-                #vals = np.where(np.isnan(vals), 0, vals)
+
+                #print(ds.time[count].values, ds.time[count+1].values, ds.time[count+2].values)
+                #print(st_count)
+                #sys.exit()
+                ndvi_pre[yr_count,:,:] += ds.ndvi[count-3,:,:]
+                ndvi_pre[yr_count,:,:] += ds.ndvi[count-2,:,:]
+                ndvi_pre[yr_count,:,:] += ds.ndvi[count-1,:,:]
                 ndvi_pre[yr_count,:,:] += ds.ndvi[count,:,:]
                 ndvi_pre[yr_count,:,:] += ds.ndvi[count+1,:,:]
                 ndvi_pre[yr_count,:,:] += ds.ndvi[count+2,:,:]
-                ndvi_pre[yr_count,:,:] /= 3
+                #ndvi_pre[yr_count,:,:] /= 3
+                ndvi_pre[yr_count,:,:] /= 6
 
             count += 1
         yr_count += 1
@@ -75,10 +85,6 @@ def main(fname, plot_dir):
     ndvi_pre = np.where(ndvi_pre < 0.0, np.nan, ndvi_pre)
 
 
-    # We will have incremented the counter by one too many on the final
-    # iteration, fix this as we need to start at the right point for 2000
-    count = count - 1
-
     # 2000-2009
     nyears = 10
     ndvi_dur = np.zeros((nyears,nrows,ncols))
@@ -87,10 +93,16 @@ def main(fname, plot_dir):
         for month in np.arange(1, 13):
 
             if month == 12:
+                print(ds.time[count].values, ds.time[count+1].values, ds.time[count+2].values)
+
+                ndvi_dur[yr_count,:,:] += ds.ndvi[count-3,:,:]
+                ndvi_dur[yr_count,:,:] += ds.ndvi[count-2,:,:]
+                ndvi_dur[yr_count,:,:] += ds.ndvi[count-1,:,:]
                 ndvi_dur[yr_count,:,:] += ds.ndvi[count,:,:]
                 ndvi_dur[yr_count,:,:] += ds.ndvi[count+1,:,:]
                 ndvi_dur[yr_count,:,:] += ds.ndvi[count+2,:,:]
-                ndvi_dur[yr_count,:,:] /= 3
+                #ndvi_dur[yr_count,:,:] /= 3
+                ndvi_dur[yr_count,:,:] /= 6
 
             count += 1
         yr_count += 1
