@@ -25,7 +25,7 @@ import matplotlib.ticker as mticker
 from cartopy.mpl.geoaxes import GeoAxes
 from mpl_toolkits.axes_grid1 import AxesGrid
 
-def main(ofname, fname):
+def main(ofname, fname, fig_label):
 
     nrows = 245
     ncols = 294
@@ -79,7 +79,7 @@ def main(ofname, fname):
     #cbar.ax.set_yticklabels([' ', '-30', '-15', '0', '15', '<=70'])
 
     props = dict(boxstyle='round', facecolor='white', alpha=0.0, ec="white")
-    ax.text(0.95, 0.05, "(b)", transform=ax.transAxes, fontsize=12,
+    ax.text(0.95, 0.05, fig_label, transform=ax.transAxes, fontsize=12,
              verticalalignment='top', bbox=props)
 
     fig.savefig(ofname, dpi=300, bbox_inches='tight',
@@ -134,8 +134,8 @@ if __name__ == "__main__":
     plot_dir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
     fn = "md_change.bin"
     ofname = os.path.join(plot_dir, "ndvi_avhrr_md.png")
-    main(ofname, fn)
+    main(ofname, fn, fig_label="(c)")
 
     fn = "cd_change.bin"
     ofname = os.path.join(plot_dir, "ndvi_avhrr_cd.png")
-    main(ofname, fn)
+    main(ofname, fn, fig_label="(d)")
