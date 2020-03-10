@@ -42,12 +42,25 @@ def main(fname, plot_dir):
         for month in np.arange(1, 13):
 
             if month == 12:
-                #vals = ds.VOD[count,:,:].values
-                #vals = np.where(np.isnan(vals), 0, vals)
-                vod_pre[yr_count,:,:] += ds.VOD[count,:,:]
-                vod_pre[yr_count,:,:] += ds.VOD[count+1,:,:]
-                vod_pre[yr_count,:,:] += ds.VOD[count+2,:,:]
-                vod_pre[yr_count,:,:] /= 3
+
+                vod_count = np.zeros((nrows,ncols))
+
+                vals = ds.VOD[count,:,:].values
+                vals = np.where(np.isnan(vals), 0.0, vals)
+                vod_count = np.where(vals > 0.0, vod_count+1, vod_count)
+                vod_pre[yr_count,:,:] += vals
+
+                vals = ds.VOD[count+1,:,:].values
+                vals = np.where(np.isnan(vals), 0.0, vals)
+                vod_count = np.where(vals > 0.0, vod_count+1, vod_count)
+                vod_pre[yr_count,:,:] += vals
+
+                vals = ds.VOD[count+2,:,:].values
+                vals = np.where(np.isnan(vals), 0.0, vals)
+                vod_count = np.where(vals > 0.0, vod_count+1, vod_count)
+                vod_pre[yr_count,:,:] += vals
+
+                vod_pre[yr_count,:,:] /= vod_count
 
             count += 1
         yr_count += 1
@@ -67,10 +80,26 @@ def main(fname, plot_dir):
         for month in np.arange(1, 13):
 
             if month == 12:
-                vod_dur[yr_count,:,:] += ds.VOD[count,:,:]
-                vod_dur[yr_count,:,:] += ds.VOD[count+1,:,:]
-                vod_dur[yr_count,:,:] += ds.VOD[count+2,:,:]
-                vod_dur[yr_count,:,:] /= 3
+
+                vod_count = np.zeros((nrows,ncols))
+
+                vals = ds.VOD[count,:,:].values
+                vals = np.where(np.isnan(vals), 0.0, vals)
+                vod_count = np.where(vals > 0.0, vod_count+1, vod_count)
+                vod_dur[yr_count,:,:] += vals
+
+                vals = ds.VOD[count+1,:,:].values
+                vals = np.where(np.isnan(vals), 0.0, vals)
+                vod_count = np.where(vals > 0.0, vod_count+1, vod_count)
+                vod_dur[yr_count,:,:] += vals
+
+                vals = ds.VOD[count+2,:,:].values
+                vals = np.where(np.isnan(vals), 0.0, vals)
+                vod_count = np.where(vals > 0.0, vod_count+1, vod_count)
+                vod_dur[yr_count,:,:] += vals
+
+                vod_dur[yr_count,:,:] /= vod_count
+
 
             count += 1
         yr_count += 1
