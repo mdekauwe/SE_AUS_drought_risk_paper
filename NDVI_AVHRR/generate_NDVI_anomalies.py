@@ -127,11 +127,56 @@ def main(src_ds):
     ndvi_pre = np.flipud(ndvi_pre)
     ndvi_pre = np.where(ndvi_pre < 0.0, np.nan, ndvi_pre)
 
+
+    """
     # 2000-2009
     nyears = 10
     ndvi_dur = np.zeros((nyears,nrows,ncols))
     yr_count = 0
     for year in np.arange(2000, 2010):
+        for month in np.arange(1, 13):
+
+            if month == 12:
+                ndvi_count = np.zeros((nrows,ncols))
+
+                print(year, month, count)
+                (aus, aus_lat, aus_lon) = get_data(src_ds, count)
+                aus = np.where(np.isnan(aus), 0.0, aus)
+                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
+                ndvi_dur[yr_count,:,:] += aus
+
+                (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
+                aus = np.where(np.isnan(aus), 0.0, aus)
+                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
+                ndvi_dur[yr_count,:,:] += aus
+
+                (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
+                aus = np.where(np.isnan(aus), 0.0, aus)
+                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
+                ndvi_dur[yr_count,:,:] += aus
+
+                ndvi_dur[yr_count,:,:] /= ndvi_count
+
+
+            count += 1
+        yr_count += 1
+
+    ndvi_dur = np.nanmean(ndvi_dur, axis=0)
+    ndvi_dur = np.flipud(ndvi_dur)
+    ndvi_dur = np.where(ndvi_dur < 0.0, np.nan, ndvi_dur)
+
+    chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
+
+    #print(chg.shape)
+    chg.tofile("md_change.bin")
+    """
+
+    # 2003-2007
+    count = 253 # 2003
+    nyears = (2007 - 2003) + 1
+    ndvi_dur = np.zeros((nyears,nrows,ncols))
+    yr_count = 0
+    for year in np.arange(2003, 2008):
         for month in np.arange(1, 13):
 
             if month == 12:
