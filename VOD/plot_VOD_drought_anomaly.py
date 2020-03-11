@@ -43,6 +43,15 @@ def main(fname, plot_dir):
 
             if month == 12:
 
+                if year == 1993:
+                    
+                    lats = ds.latitude.values
+                    lons = ds.longitude.values
+                    lats.tofile("lat_vod.bin")
+                    lons.tofile("lon_vod.bin")
+                    print(lats.shape)
+                    print(lons.shape)
+
                 vod_count = np.zeros((nrows,ncols))
 
                 vals = ds.VOD[count,:,:].values
@@ -108,6 +117,8 @@ def main(fname, plot_dir):
     vod_dur = np.flipud(vod_dur)
 
     chg = ((vod_dur - vod_pre) / vod_pre) * 100.0
+    print(chg.shape)
+    chg.tofile("md_change.bin")
 
     fig = plt.figure(figsize=(9, 6))
     plt.rcParams['font.family'] = "sans-serif"

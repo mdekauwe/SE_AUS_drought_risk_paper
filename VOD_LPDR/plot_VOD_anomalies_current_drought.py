@@ -60,7 +60,13 @@ def main(plot_dir, fname):
             bottom, top = np.min(dfx.lat), np.max(dfx.lat)
             left, right = np.min(dfx.lon), np.max(dfx.lon)
             print(top, bottom, left, right)
-
+            lats = dfx.lat.values
+            lons = dfx.lon.values
+            lats.tofile("lat_vod.bin")
+            lons.tofile("lon_vod.bin")
+            print(lats.shape)
+            print(lons.shape)
+            #sys.exit()
 
         data = np.where(np.isnan(data), 0.0, data)
         vod_count = np.where(data > 0.0, vod_count+1, vod_count)
@@ -96,6 +102,8 @@ def main(plot_dir, fname):
     #plt.show()
 
     chg = ((vod_dro - vod_pre) / vod_pre) * 100.0
+    print(chg.shape)
+    chg.tofile("cd_change.bin")
 
     nrows = 245
     ncols = 294

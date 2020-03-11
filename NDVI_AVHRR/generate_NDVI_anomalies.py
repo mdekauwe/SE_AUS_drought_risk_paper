@@ -100,6 +100,11 @@ def main(src_ds):
                     bottom, top = np.min(aus_lat), np.max(aus_lat)
                     left, right = np.min(aus_lon), np.max(aus_lon)
                     print(top, bottom, left, right)
+                    aus_lat.tofile("lat_ndvi.bin")
+                    aus_lon.tofile("lon_ndvi.bin")
+                    #print(aus_lat.shape)
+                    #print(aus_lon.shape)
+                    #sys.exit()
 
                 (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
                 aus = np.where(np.isnan(aus), 0.0, aus)
