@@ -83,7 +83,7 @@ def find_nearest(array, value):
 
 if __name__ == "__main__":
 
-    #"""
+    """
     print(" ")
     print("NDVI")
     print("======")
@@ -129,16 +129,16 @@ if __name__ == "__main__":
     fdir = "/Users/mdekauwe/Desktop/drought_desktop/outputs"
     plc_fname = os.path.join(fdir, "all_yrs_plc.nc")
 
-    nrows = 46
-    ncols = 52
-    fdir = "../VOD_LPDR/"
+    nrows = 140
+    ncols = 180
+    fdir = "../VOD/"
     vod_fname = os.path.join(fdir, "md_change.bin")
     vod_lat_fname = os.path.join(fdir, "lat_vod.bin")
     vod_lon_fname = os.path.join(fdir, "lon_vod.bin")
 
     calc_correlation(plc_fname, vod_fname, vod_lat_fname, vod_lon_fname,
                      nrows, ncols)
-
+    """
 
     #
     ## Current drought
