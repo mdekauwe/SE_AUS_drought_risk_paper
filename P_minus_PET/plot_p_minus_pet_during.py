@@ -47,25 +47,10 @@ def main(pet_fname, ppt_fname, plot_dir):
         #print(year)
         for month in np.arange(1, 13):
 
-            if year == 2000 and month >= 7:
-
-                pet[yr_count,:,:] += ds_pet.PET[count,:,:]
-                ppt[yr_count,:,:] += ds_ppt.precip[count,:,:]
-
-                mth_count += 1
-
-            elif year > 2000 and year <= 2009:
-
-                pet[yr_count,:,:] += ds_pet.PET[count,:,:]
-                ppt[yr_count,:,:] += ds_ppt.precip[count,:,:]
-                mth_count += 1
-
-            elif year == 2009 and month <= 6:
-
-                pet[yr_count,:,:] += ds_pet.PET[count,:,:]
-                ppt[yr_count,:,:] += ds_ppt.precip[count,:,:]
-                mth_count += 1
-
+            pet[yr_count,:,:] += ds_pet.PET[count,:,:]
+            ppt[yr_count,:,:] += ds_ppt.precip[count,:,:]
+            #print(year, month, np.mean(ds_pet.PET[count,:,:]), np.mean(ds_ppt.precip[count,:,:]))
+            mth_count += 1
 
 
             if mth_count == 13:
@@ -75,8 +60,9 @@ def main(pet_fname, ppt_fname, plot_dir):
 
             count += 1
 
-    ppt = np.mean(ds_ppt.precip[0:count,:,:], axis=0)
-    pet = np.mean(ds_pet.PET[0:count,:,:], axis=0)
+
+    ppt = np.mean(ppt, axis=0)
+    pet = np.mean(pet, axis=0)
     cmi = ppt - pet
 
     # just keep deficit areas
@@ -92,7 +78,7 @@ def main(pet_fname, ppt_fname, plot_dir):
     plt.rcParams['font.size'] = "14"
     plt.rcParams['font.sans-serif'] = "Helvetica"
 
-    cmap = plt.cm.get_cmap('BrBG', 8) # discrete colour map
+    cmap = plt.cm.get_cmap('BrBG', 10) # discrete colour map
 
     projection = ccrs.PlateCarree()
     axes_class = (GeoAxes, dict(map_projection=projection))
@@ -126,11 +112,7 @@ def main(pet_fname, ppt_fname, plot_dir):
         ax.add_feature(states, edgecolor='black', lw=0.5)
 
     cbar = axgr.cbar_axes[0].colorbar(plims)
-<<<<<<< HEAD
     cbar.ax.set_title("P-PET\n(mm yr$^{-1}$)", fontsize=16, pad=12)
-=======
-    cbar.ax.set_title("P-PET\n(mm yr$^{-1}$)", fontsize=16)
->>>>>>> 4b7f1bb77a0659d9209e9de5bb7982a2e8ed2dda
 
     ofname = os.path.join(plot_dir, "p_minus_pet_during.png")
     fig.savefig(ofname, dpi=300, bbox_inches='tight',
@@ -138,7 +120,7 @@ def main(pet_fname, ppt_fname, plot_dir):
 
 def plot_map(ax, var, cmap, i, top, bottom, left, right):
     print(np.nanmin(var), np.nanmax(var))
-    vmin, vmax = -160, 160
+    vmin, vmax = -2000, 2000
     #top, bottom = 89.8, -89.8
     #left, right = 0, 359.8
     img = ax.imshow(var, origin='lower',
@@ -149,13 +131,8 @@ def plot_map(ax, var, cmap, i, top, bottom, left, right):
     ax.coastlines(resolution='10m', linewidth=1.0, color='black')
     #ax.add_feature(cartopy.feature.OCEAN)
 
-<<<<<<< HEAD
     ax.set_xlim(140.7, 154)
     ax.set_ylim(-39.2, -28.1)
-=======
-    ax.set_xlim(140, 154)
-    ax.set_ylim(-39.4, -28)
->>>>>>> 4b7f1bb77a0659d9209e9de5bb7982a2e8ed2dda
 
     if i == 0 or i >= 5:
 

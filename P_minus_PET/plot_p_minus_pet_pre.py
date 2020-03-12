@@ -40,25 +40,11 @@ def main(pet_fname, ppt_fname, plot_dir):
         print(year)
         for month in np.arange(1, 13):
 
-            if year == 1990 and month >= 7:
 
-                pet[yr_count,:,:] += ds_pet.PET[count,:,:]
-                ppt[yr_count,:,:] += ds_ppt.precip[count,:,:]
-
-                mth_count += 1
-
-            elif year > 1990 and year <= 1999:
-
-                pet[yr_count,:,:] += ds_pet.PET[count,:,:]
-                ppt[yr_count,:,:] += ds_ppt.precip[count,:,:]
-                mth_count += 1
-
-            elif year == 1999 and month <= 6:
-
-                pet[yr_count,:,:] += ds_pet.PET[count,:,:]
-                ppt[yr_count,:,:] += ds_ppt.precip[count,:,:]
-                mth_count += 1
-
+            pet[yr_count,:,:] += ds_pet.PET[count,:,:]
+            ppt[yr_count,:,:] += ds_ppt.precip[count,:,:]
+            #print(year, month, np.mean(ds_pet.PET[count,:,:]), np.mean(ds_ppt.precip[count,:,:]))
+            mth_count += 1
 
 
             if mth_count == 13:
@@ -69,8 +55,8 @@ def main(pet_fname, ppt_fname, plot_dir):
             count += 1
 
 
-    ppt = np.mean(ds_ppt.precip[0:count,:,:], axis=0)
-    pet = np.mean(ds_pet.PET[0:count,:,:], axis=0)
+    ppt = np.mean(ppt, axis=0)
+    pet = np.mean(pet, axis=0)
     cmi = ppt - pet
 
     # just keep deficit areas
@@ -86,7 +72,7 @@ def main(pet_fname, ppt_fname, plot_dir):
     plt.rcParams['font.size'] = "14"
     plt.rcParams['font.sans-serif'] = "Helvetica"
 
-    cmap = plt.cm.get_cmap('BrBG', 8) # discrete colour map
+    cmap = plt.cm.get_cmap('BrBG', 10) # discrete colour map
 
     projection = ccrs.PlateCarree()
     axes_class = (GeoAxes, dict(map_projection=projection))
@@ -129,7 +115,7 @@ def main(pet_fname, ppt_fname, plot_dir):
 
 def plot_map(ax, var, cmap, i, top, bottom, left, right):
     print(np.nanmin(var), np.nanmax(var))
-    vmin, vmax = -160, 160
+    vmin, vmax = -2000, 2000
     #top, bottom = 89.8, -89.8
     #left, right = 0, 359.8
     img = ax.imshow(var, origin='lower',
