@@ -16,114 +16,25 @@ import glob
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import colors
 import cartopy.crs as ccrs
 import cartopy
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-import gdal
+import sys
+import matplotlib.ticker as mticker
+from cartopy.mpl.geoaxes import GeoAxes
+from mpl_toolkits.axes_grid1 import AxesGrid
 
-def main(src_ds):
+def main(ofname, fname, fig_label):
 
-    ndates = src_ds.RasterCount
+    nrows = 245
+    ncols = 294
+    top = -28.11777496171026
+    bottom = -39.11842235453331
+    left = 140.72354445986807
+    right = 153.92617951020088
+    chg = np.fromfile(fname).reshape(nrows, ncols)
 
-    (aus, aus_lat, aus_lon) = get_data(src_ds, 1)
-    nrows, ncols = aus.shape
-
-    #plt.imshow(np.flipud(aus))
-    #plt.colorbar()
-    #plt.show()
-    #"""
-
-    """
-    year = 1982
-    month = 1
-    st_count = 1
-    for i in range(1, ndates + 1):
-
-        if year == 1983:
-            break
-        print(i, year, month, st_count)
-
-        month += 1
-        st_count += 1
-
-        if month == 13:
-            month = 1
-            year += 1
-
-    print(st_count)
-    sys.exit()
-    """
-
-    st_count = 13 # 1983
-
-    # Get baseline period
-    # 1993-1999
-    nyears = (1999 - 1983) + 1
-    ndvi_pre = np.zeros((nyears,nrows,ncols))
-    vals = np.zeros((3,nrows,ncols)) # summer
-    yr_count = 0
-    count = st_count
-    for year in np.arange(1983, 2000):
-        for month in np.arange(1, 13):
-
-            if month == 12:
-
-                print(year, month, count)
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count)
-                ndvi_pre[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
-                ndvi_pre[yr_count,:,:] += aus
-
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
-                ndvi_pre[yr_count,:,:] += aus
-
-                ndvi_pre[yr_count,:,:] /= 3
-
-
-                #plt.imshow(ndvi_pre[yr_count,:,:])
-                #plt.colorbar()
-                #plt.show()
-                #sys.exit()
-
-            count += 1
-        yr_count += 1
-
-    ndvi_pre = np.nanmean(ndvi_pre, axis=0)
-    ndvi_pre = np.flipud(ndvi_pre)
-    ndvi_pre = np.where(ndvi_pre < 0.0, np.nan, ndvi_pre)
-
-    # 2000-2009
-    nyears = 10
-    ndvi_dur = np.zeros((nyears,nrows,ncols))
-    yr_count = 0
-    for year in np.arange(2000, 2010):
-        for month in np.arange(1, 13):
-
-            if month == 12:
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
-                ndvi_dur[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
-                ndvi_dur[yr_count,:,:] += aus
-
-                ndvi_dur[yr_count,:,:] /= 3
-
-
-            count += 1
-        yr_count += 1
-
-    ndvi_dur = np.nanmean(ndvi_dur, axis=0)
-    ndvi_dur = np.flipud(ndvi_dur)
-    ndvi_dur = np.where(ndvi_dur < 0.0, np.nan, ndvi_dur)
-
-    chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
 
     fig = plt.figure(figsize=(9, 6))
     plt.rcParams['font.family'] = "sans-serif"
@@ -168,10 +79,9 @@ def main(src_ds):
     #cbar.ax.set_yticklabels([' ', '-30', '-15', '0', '15', '<=70'])
 
     props = dict(boxstyle='round', facecolor='white', alpha=0.0, ec="white")
-    ax.text(0.95, 0.05, "(b)", transform=ax.transAxes, fontsize=12,
+    ax.text(0.95, 0.05, fig_label, transform=ax.transAxes, fontsize=12,
              verticalalignment='top', bbox=props)
 
-    ofname = os.path.join(plot_dir, "ndvi_avhrr_md.png")
     fig.savefig(ofname, dpi=300, bbox_inches='tight',
                 pad_inches=0.1)
 
@@ -219,40 +129,13 @@ def plot_map(ax, var, cmap, i, top, bottom, left, right):
 
     return img
 
-def get_data(src_ds, band_count):
-    band = src_ds.GetRasterBand(band_count)
-
-    cols = src_ds.RasterXSize
-    rows = src_ds.RasterYSize
-    transform = src_ds.GetGeoTransform()
-    xOrigin = transform[0]
-    yOrigin = transform[3]
-    pixelWidth = transform[1]
-    pixelHeight = -transform[5]
-    ulx, xres, xskew, uly, yskew, yres  = src_ds.GetGeoTransform()
-    lrx = ulx + (src_ds.RasterXSize * xres)
-    lry = uly + (src_ds.RasterYSize * yres)
-
-    lats = np.linspace(uly, lry, rows)
-    lons = np.linspace(ulx, lrx, cols)
-
-    lonx, laty = np.meshgrid(lats, lons)
-    latx = np.ones((len(lats),len(lons))).shape
-
-    # subset by SE Aus
-    data = band.ReadAsArray(0, 0, cols, rows)
-    idy = np.argwhere((lats>=-39.2) & (lats<-28.1))
-    idx = np.argwhere((lons>=140.7) & (lons<154.))
-
-    aus = data[idy.min():idy.max(),idx.min():idx.max()]
-    aus_lat = lats[idy.min():idy.max()]
-    aus_lon = lons[idx.min():idx.max()]
-
-    return (aus, aus_lat, aus_lon)
-
-
 if __name__ == "__main__":
 
-    fn = "AVHRR_EVI2_SEAUS_1982_2019.tif"
-    src_ds = gdal.Open(fn)
-    main(src_ds)
+    plot_dir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
+    fn = "md_change.bin"
+    ofname = os.path.join(plot_dir, "ndvi_avhrr_md.png")
+    main(ofname, fn, fig_label="(c)")
+
+    fn = "cd_change.bin"
+    ofname = os.path.join(plot_dir, "ndvi_avhrr_cd.png")
+    main(ofname, fn, fig_label="(d)")

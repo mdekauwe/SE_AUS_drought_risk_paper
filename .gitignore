@@ -16,3 +16,6 @@ PPT_percentiles/*.nc
 VOD/*.nc
 NDVI/*.nc
 NDVI_AVHRR/*.tif
+NDVI_AVHRR/*.bin
+VOD_LPDR/*.parquet
+*.bin

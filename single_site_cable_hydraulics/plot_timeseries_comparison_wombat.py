@@ -108,8 +108,8 @@ def main(site, met_fname, flux_fname, fname1, fname2, plot_fname=None):
                 transform=a.transAxes, fontsize=14, verticalalignment='top',
                 bbox=props)
 
-    ax1.set_ylim(0, 12)
-    ax2.set_ylim(0, 150)
+    ax1.set_ylim(0, 13)
+    ax2.set_ylim(0, 170)
 
 
     axx1.set_yticks([0, 15, 30])
