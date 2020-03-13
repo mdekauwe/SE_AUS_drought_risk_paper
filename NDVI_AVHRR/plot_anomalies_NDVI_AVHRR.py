@@ -93,6 +93,11 @@ def calc_average(ds, start_year, end_year):
 
 def plot_anomaly(ofname, chg, bottom, top, left, right, fig_label):
 
+    # visually fudge geo-transform issue until fixed.
+    offset = -0.2
+    top = -28.00497898242608 - offset
+    bottom = -39.997488025421696 - offset
+
     fig = plt.figure(figsize=(9, 6))
     plt.rcParams['font.family'] = "sans-serif"
     plt.rcParams['font.size'] = "14"
