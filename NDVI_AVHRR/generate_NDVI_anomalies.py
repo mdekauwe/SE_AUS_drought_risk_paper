@@ -16,302 +16,110 @@ import glob
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import xarray as xr
 
-import gdal
+def main(fname):
 
-def main(src_ds):
+    ds = xr.open_dataset(fname)
+    bottom, top = np.min(ds.lat).values, np.max(ds.lat).values
+    left, right = np.min(ds.lon).values, np.max(ds.lon).values
 
-    ndates = src_ds.RasterCount
+    print(top, bottom, left, right)
 
-    (aus, aus_lat, aus_lon) = get_data(src_ds, 1)
-    nrows, ncols = aus.shape
-
-    #plt.imshow(np.flipud(aus))
-    #plt.colorbar()
-    #plt.show()
-    #"""
-
-    """
-    year = 1982
-    month = 1
-    st_count = 1
-    for i in range(1, ndates + 1):
-
-        if year == 1983:
-            break
-        print(i, year, month, st_count)
-
-        month += 1
-        st_count += 1
-
-        if month == 13:
-            month = 1
-            year += 1
-
-    print(st_count)
-    sys.exit()
-    """
-
-    """
-    year = 1982
-    month = 1
-    st_count = 1
-    for i in range(1, ndates + 1):
-
-        if year == 2017:
-            break
-        print(i, year, month, st_count)
-
-        month += 1
-        st_count += 1
-
-        if month == 13:
-            month = 1
-            year += 1
-
-    print(st_count)
-    sys.exit()
-    """
+    ndates, nrows, ncols = ds.NDVI.shape
 
 
-    st_count = 13 # 1983
+
 
     # Get baseline period
     # 1998-1999
     nyears = (1999 - 1983) + 1
     ndvi_pre = np.zeros((nyears,nrows,ncols))
-    vals = np.zeros((3,nrows,ncols)) # summer
     yr_count = 0
-    count = st_count
-    for year in np.arange(1983, 2000):
-        for month in np.arange(1, 13):
+    for i in range(ndates):
+        date = ds.time.values[i]
+        year = int(str(ds.time.values[i]).split("-")[0])
+        month = str(ds.time.values[i]).split("-")[1]
 
-            if month == 12:
-                ndvi_count = np.zeros((nrows,ncols))
-
-                print("baseline", year, month, count)
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_pre[yr_count,:,:] += aus
-
-                if yr_count  == 0:
-                    bottom, top = np.min(aus_lat), np.max(aus_lat)
-                    left, right = np.min(aus_lon), np.max(aus_lon)
-                    print(top, bottom, left, right)
-                    aus_lat.tofile("lat_ndvi.bin")
-                    aus_lon.tofile("lon_ndvi.bin")
-                    #print(aus_lat.shape)
-                    #print(aus_lon.shape)
-                    #sys.exit()
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_pre[yr_count,:,:] += aus
-
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_pre[yr_count,:,:] += aus
-
-                ndvi_pre[yr_count,:,:] /= ndvi_count
-
-
-                #plt.imshow(ndvi_pre[yr_count,:,:])
-                #plt.colorbar()
-                #plt.show()
-                #sys.exit()
-
-            count += 1
-        yr_count += 1
+        if year >= 1983 and year < 2000 and month == "01":
+            ndvi_pre[yr_count,:,:] = ds.NDVI[i,:,:]
+            yr_count += 1
 
     ndvi_pre = np.nanmean(ndvi_pre, axis=0)
-    ndvi_pre = np.flipud(ndvi_pre)
     ndvi_pre = np.where(ndvi_pre < 0.0, np.nan, ndvi_pre)
 
+    plt.imshow(ndvi_pre)
+    plt.colorbar()
+    plt.show()
+    sys.exit()
 
-    """
     # 2000-2009
-    nyears = 10
+    nyears = (2009 - 2000) + 1
     ndvi_dur = np.zeros((nyears,nrows,ncols))
+
+    vals = np.zeros((nrows,ncols))
     yr_count = 0
-    for year in np.arange(2000, 2010):
-        for month in np.arange(1, 13):
+    for i in range(ndates):
+        date = ds.time.values[i]
+        year = int(str(ds.time.values[i]).split("-")[0])
+        month = str(ds.time.values[i]).split("-")[1]
 
-            if month == 12:
-                ndvi_count = np.zeros((nrows,ncols))
+        if year >= 2000 and year < 2010 and month == "01":
+            ndvi_dur[yr_count,:,:] = ds.NDVI[i,:,:]
+            yr_count += 1
 
-                print(year, month, count)
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                ndvi_dur[yr_count,:,:] /= ndvi_count
-
-
-            count += 1
-        yr_count += 1
-
+    print(yr_count, nyears)
     ndvi_dur = np.nanmean(ndvi_dur, axis=0)
-    ndvi_dur = np.flipud(ndvi_dur)
     ndvi_dur = np.where(ndvi_dur < 0.0, np.nan, ndvi_dur)
+
+    #plt.imshow(ndvi_pre)
+    #plt.colorbar()
+    #plt.show()
+    #sys.exit()
+
 
     chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
 
-    #print(chg.shape)
+    print(chg.shape)
     chg.tofile("md_change.bin")
-    """
-
-    # 2003-2007
-    count = 253 # 2003
-    nyears = (2007 - 2003) + 1
-    ndvi_dur = np.zeros((nyears,nrows,ncols))
-    yr_count = 0
-    for year in np.arange(2003, 2008):
-        for month in np.arange(1, 13):
-
-            if month == 12:
-                ndvi_count = np.zeros((nrows,ncols))
-
-                print(year, month, count)
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                ndvi_dur[yr_count,:,:] /= ndvi_count
-
-
-            count += 1
-        yr_count += 1
-
-    ndvi_dur = np.nanmean(ndvi_dur, axis=0)
-    ndvi_dur = np.flipud(ndvi_dur)
-    ndvi_dur = np.where(ndvi_dur < 0.0, np.nan, ndvi_dur)
-
-    chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
-
-    #print(chg.shape)
-    chg.tofile("md_change.bin")
-
-
-    st_count = 13 # 1983
 
     # Get baseline period
-    # 1998-2016
+    # 1983-2016
     nyears = (2016 - 1983) + 1
     ndvi_pre = np.zeros((nyears,nrows,ncols))
-    vals = np.zeros((3,nrows,ncols)) # summer
     yr_count = 0
-    count = st_count
-    for year in np.arange(1983, 2017):
-        for month in np.arange(1, 13):
+    for i in range(ndates):
+        date = ds.time.values[i]
+        year = int(str(ds.time.values[i]).split("-")[0])
+        month = str(ds.time.values[i]).split("-")[1]
 
-            if month == 12:
-                ndvi_count = np.zeros((nrows,ncols))
-
-                print("baseline", year, month, count)
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_pre[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_pre[yr_count,:,:] += aus
-
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_pre[yr_count,:,:] += aus
-
-                ndvi_pre[yr_count,:,:] /= ndvi_count
-
-
-            count += 1
-        yr_count += 1
+        if year >= 1983 and year < 2017 and month == "01":
+            ndvi_pre[yr_count,:,:] = ds.NDVI[i,:,:]
+            yr_count += 1
 
     ndvi_pre = np.nanmean(ndvi_pre, axis=0)
-    ndvi_pre = np.flipud(ndvi_pre)
     ndvi_pre = np.where(ndvi_pre < 0.0, np.nan, ndvi_pre)
 
 
     # 2017-2019
-    count = 421 # 2017
-    nyears = 3 - 1
+    nyears = (2019 - 2017) + 1
     ndvi_dur = np.zeros((nyears,nrows,ncols))
+
+    vals = np.zeros((nrows,ncols))
     yr_count = 0
-    for year in np.arange(2017, 2020):
-        for month in np.arange(1, 13):
+    for i in range(ndates):
+        date = ds.time.values[i]
+        year = int(str(ds.time.values[i]).split("-")[0])
+        month = str(ds.time.values[i]).split("-")[1]
 
-            if month == 12 and year < 2019:
-                ndvi_count = np.zeros((nrows,ncols))
+        if year >= 2017 and year < 2020 and month == "01":
+            ndvi_dur[yr_count,:,:] = ds.NDVI[i,:,:]
+            yr_count += 1
 
-                print(year, month, count)
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                (aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
-                aus = np.where(np.isnan(aus), 0.0, aus)
-                ndvi_count = np.where(aus > 0.0, ndvi_count+1, ndvi_count)
-                ndvi_dur[yr_count,:,:] += aus
-
-                ndvi_dur[yr_count,:,:] /= ndvi_count
-
-            #if month == 12 and year == 2019:
-
-            #    (aus, aus_lat, aus_lon) = get_data(src_ds, count)
-            #    ndvi_dur[yr_count,:,:] += aus
-
-                #(aus, aus_lat, aus_lon) = get_data(src_ds, count+1)
-                #ndvi_dur[yr_count,:,:] += aus
-
-                #(aus, aus_lat, aus_lon) = get_data(src_ds, count+2)
-                #ndvi_dur[yr_count,:,:] += aus
-
-                #ndvi_dur[yr_count,:,:] /= 3
-
-
-            count += 1
-        yr_count += 1
-
+    print(yr_count, nyears)
     ndvi_dur = np.nanmean(ndvi_dur, axis=0)
-    ndvi_dur = np.flipud(ndvi_dur)
     ndvi_dur = np.where(ndvi_dur < 0.0, np.nan, ndvi_dur)
+
 
     chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
 
@@ -397,6 +205,5 @@ def get_data(src_ds, band_count):
 
 if __name__ == "__main__":
 
-    fn = "AVHRR_EVI2_SEAUS_1982_2019.tif"
-    src_ds = gdal.Open(fn)
-    main(src_ds)
+    fn = "AVHRR_CDRv5_NDVI_yearSeason_mean_1982_2019.nc"
+    main(fn)

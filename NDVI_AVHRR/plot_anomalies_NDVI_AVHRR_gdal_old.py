@@ -27,13 +27,12 @@ from mpl_toolkits.axes_grid1 import AxesGrid
 
 def main(ofname, fname, fig_label):
 
-    nrows = 261
-    ncols = 305
-    top = -28.00497898242608
-    bottom = -39.997488025421696
-    left = 140.0248949121304
-    right = 153.67928723074712
-
+    nrows = 245
+    ncols = 294
+    top = -28.11777496171026
+    bottom = -39.11842235453331
+    left = 140.72354445986807
+    right = 153.92617951020088
     chg = np.fromfile(fname).reshape(nrows, ncols)
 
 
