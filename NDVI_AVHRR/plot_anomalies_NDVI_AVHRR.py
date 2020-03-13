@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Plot NDVI anomalies during droughts
+Plot NDVI anomalies during two droughts
 
 That's all folks.
 """
@@ -16,6 +16,7 @@ import glob
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import xarray as xr
 from matplotlib import colors
 import cartopy.crs as ccrs
 import cartopy
@@ -25,17 +26,72 @@ import matplotlib.ticker as mticker
 from cartopy.mpl.geoaxes import GeoAxes
 from mpl_toolkits.axes_grid1 import AxesGrid
 
-def main(ofname, fname, fig_label):
 
-    nrows = 261
-    ncols = 305
-    top = -28.00497898242608
-    bottom = -39.997488025421696
-    left = 140.0248949121304
-    right = 153.67928723074712
+def main(fname, plot_dir):
 
-    chg = np.fromfile(fname).reshape(nrows, ncols)
+    ds = xr.open_dataset(fname)
+    bottom, top = np.min(ds.lat).values, np.max(ds.lat).values
+    left, right = np.min(ds.lon).values, np.max(ds.lon).values
 
+    # Get baseline period
+    # 1993-1999
+    ndvi_pre = calc_average(ds, 1993, 1999) # Match VODs
+
+    #plt.imshow(ndvi_pre)
+    #plt.colorbar()
+    #plt.show()
+    #sys.exit()
+
+    # Get drought period
+    # 2000-2009
+    ndvi_dur = calc_average(ds, 2000, 2009)
+
+    chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
+    chg.tofile("md_change.bin")
+
+    ofname = os.path.join(plot_dir, "ndvi_avhrr_md.png")
+    plot_anomaly(ofname, chg, bottom, top, left, right, fig_label="(c)")
+
+    # Get baseline period
+    # 1993-2016
+    ndvi_pre = calc_average(ds, 1993, 2016)
+
+    # Get drought period
+    # 2017-2019
+    ndvi_dur = calc_average(ds, 2017, 2019)
+
+    chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
+    chg.tofile("cd_change.bin")
+
+    ofname = os.path.join(plot_dir, "ndvi_avhrr_cd.png")
+    plot_anomaly(ofname, chg, bottom, top, left, right, fig_label="(d)")
+
+
+def calc_average(ds, start_year, end_year):
+
+    ndates, nrows, ncols = ds.NDVI.shape
+    nyears = (end_year - start_year) + 1
+    ndvi = np.zeros((nyears,nrows,ncols))
+
+    yr_count = 0
+    for i in range(ndates):
+        date = ds.time.values[i]
+        year = int(str(ds.time.values[i]).split("-")[0])
+        month = str(ds.time.values[i]).split("-")[1]
+
+        if year >= start_year and year <= end_year and month == "01":
+
+            ndvi[yr_count,:,:] = np.where(~np.isnan(ds.NDVI[i,:,:]), \
+                                          ds.NDVI[i,:,:], ndvi[yr_count,:,:])
+            yr_count += 1
+
+    ndvi = np.nanmean(ndvi, axis=0)
+    ndvi = np.where(ndvi <= 0.05, np.nan, ndvi)
+
+    return (ndvi)
+
+
+def plot_anomaly(ofname, chg, bottom, top, left, right, fig_label):
 
     fig = plt.figure(figsize=(9, 6))
     plt.rcParams['font.family'] = "sans-serif"
@@ -133,10 +189,5 @@ def plot_map(ax, var, cmap, i, top, bottom, left, right):
 if __name__ == "__main__":
 
     plot_dir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
-    fn = "md_change.bin"
-    ofname = os.path.join(plot_dir, "ndvi_avhrr_md.png")
-    main(ofname, fn, fig_label="(c)")
-
-    fn = "cd_change.bin"
-    ofname = os.path.join(plot_dir, "ndvi_avhrr_cd.png")
-    main(ofname, fn, fig_label="(d)")
+    fn = "AVHRR_CDRv5_NDVI_yearSeason_mean_1982_2019.nc"
+    main(fn, plot_dir)
