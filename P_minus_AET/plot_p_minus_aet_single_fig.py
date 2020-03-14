@@ -117,7 +117,7 @@ def plot_drought(prior, during, ofname, bottom, top, left, right):
         ax.add_feature(states, edgecolor='black', lw=0.5)
 
     cbar = axgr.cbar_axes[0].colorbar(plims)
-    cbar.ax.set_title("P-PET\n(mm yr$^{-1}$)", fontsize=16, pad=12)
+    cbar.ax.set_title("P-AET\n(mm yr$^{-1}$)", fontsize=16, pad=12)
     #cbar.ax.set_yticklabels([' ', '$\minus$40', '$\minus$20', '0', '20', '40-1300'])
 
     fig.savefig(ofname, dpi=300, bbox_inches='tight',
