@@ -97,7 +97,7 @@ def plot_drought(prior, during, ofname, bottom, top, left, right):
                     label_mode='')  # note the empty label_mode
 
     data = [prior, during]
-    fig_labels = ["(a)", "(b)"]
+    fig_labels = ["(c)", "(d)"]
     for i, ax in enumerate(axgr):
         # add a subplot into the array of plots
         #ax = fig.add_subplot(rows, cols, i+1, projection=ccrs.PlateCarree())
