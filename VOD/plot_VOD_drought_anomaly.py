@@ -44,7 +44,7 @@ def main(fname, plot_dir):
             if month == 12:
 
                 if year == 1993:
-                    
+
                     lats = ds.latitude.values
                     lons = ds.longitude.values
                     lats.tofile("lat_vod.bin")
@@ -217,10 +217,8 @@ def plot_map(ax, var, cmap, i, top, bottom, left, right):
 
 if __name__ == "__main__":
 
-    plot_dir = "plots"
-    if not os.path.exists(plot_dir):
-        os.makedirs(plot_dir)
+    plot_dir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
 
     #fname = "raw/Australia_VOD_monthly_1993_2012_masked_gapfilled.nc"
-    fname = "raw/Australia_VOD_monthly_1993_2012_non-masked_gapfilled_no_missing.nc"
+    fname = "Australia_VOD_monthly_1993_2012_non-masked_gapfilled_no_missing.nc"
     main(fname, plot_dir)
