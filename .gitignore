@@ -19,3 +19,5 @@ NDVI_AVHRR/*.tif
 NDVI_AVHRR/*.bin
 VOD_LPDR/*.parquet
 *.bin
+CABLE_outputs/Current/*.nc
+CABLE_outputs/Millennium/*.nc
