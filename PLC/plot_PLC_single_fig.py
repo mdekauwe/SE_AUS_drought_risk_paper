@@ -59,7 +59,7 @@ def plot_plc(md, cd, ofname, bottom, top, left, right):
                     axes_pad=0.3,
                     cbar_location='right',
                     cbar_mode='single',
-                    cbar_pad=0.3,
+                    cbar_pad=0.1,
                     cbar_size='5%',
                     label_mode='')  # note the empty label_mode
 
