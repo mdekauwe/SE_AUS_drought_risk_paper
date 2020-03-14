@@ -66,6 +66,29 @@ def main(fname, plot_dir):
     ofname = os.path.join(plot_dir, "ndvi_avhrr_cd.png")
     plot_anomaly(ofname, chg, bottom, top, left, right, fig_label="(d)")
 
+    # Get baseline period
+    # 1983-1999
+    ndvi_pre = calc_average(ds, 1983, 1999) # Show impact of baseline
+
+    # Get drought period
+    # 2000-2009
+    ndvi_dur = calc_average(ds, 2000, 2009)
+
+    chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
+    ofname = os.path.join(plot_dir, "ndvi_avhrr_long_baseline.png")
+    plot_anomaly(ofname, chg, bottom, top, left, right, fig_label="(b)")
+
+    # Get baseline period
+    # 1993-1999
+    ndvi_pre = calc_average(ds, 1993, 1999) # Match VODs
+
+    # Get drought period
+    # 2000-2009
+    ndvi_dur = calc_average(ds, 2000, 2009)
+
+    chg = ((ndvi_dur - ndvi_pre) / ndvi_pre) * 100.0
+    ofname = os.path.join(plot_dir, "ndvi_avhrr_same_baseline.png")
+    plot_anomaly(ofname, chg, bottom, top, left, right, fig_label="(a)")
 
 def calc_average(ds, start_year, end_year):
 
