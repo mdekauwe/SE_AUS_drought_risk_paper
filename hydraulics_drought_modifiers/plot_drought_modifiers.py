@@ -103,10 +103,10 @@ if __name__ == "__main__":
     plt.rcParams['font.family'] = "sans-serif"
     plt.rcParams['font.sans-serif'] = "Helvetica"
     plt.rcParams['axes.labelsize'] = 14
-    plt.rcParams['font.size'] = 12
-    plt.rcParams['legend.fontsize'] = 12
-    plt.rcParams['xtick.labelsize'] = 12
-    plt.rcParams['ytick.labelsize'] = 12
+    plt.rcParams['font.size'] = 14
+    plt.rcParams['legend.fontsize'] = 14
+    plt.rcParams['xtick.labelsize'] = 14
+    plt.rcParams['ytick.labelsize'] = 14
 
     ax1 = fig.add_subplot(121)
     ax2 = fig.add_subplot(122)
