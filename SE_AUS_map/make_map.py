@@ -38,6 +38,16 @@ coast = NaturalEarthFeature(category='physical', scale='10m',
                             facecolor='none', name='coastline')
 feature = ax.add_feature(coast, edgecolor='black', lw=0.5)
 
+import cartopy.feature as cfeature
+
+# add and color high-resolution land
+LAND_highres = cfeature.NaturalEarthFeature('physical', 'land', '50m',
+                                            edgecolor='white',
+                                            facecolor='#fff9e6',
+                                            linewidth=.1
+                                           )
+ax.add_feature(LAND_highres, zorder=0,
+               edgecolor='#fff9e6', facecolor='#fff9e6')
 
 fname = "/Users/mdekauwe/Dropbox/ne_10m_admin_1_states_provinces_lines/ne_10m_admin_1_states_provinces_lines.shp"
 shape_feature = ShapelyFeature(Reader(fname).geometries(),
@@ -83,3 +93,4 @@ gl.ylocator = mticker.FixedLocator([-29, -32, -35, -38])
 fdir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
 fig.savefig(os.path.join(fdir, "aus_map.png"), dpi=300, bbox_inches='tight',
             pad_inches=0.1)
+plt.show()
