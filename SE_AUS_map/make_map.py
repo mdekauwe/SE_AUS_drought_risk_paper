@@ -8,7 +8,7 @@ __author__ = "Martin De Kauwe"
 __version__ = "1.0 (27.06.2019)"
 __email__ = "mdekauwe@gmail.com"
 
-
+import os
 import cartopy
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
@@ -26,11 +26,18 @@ plt.rcParams['font.size'] = "14"
 plt.rcParams['font.sans-serif'] = "Helvetica"
 
 ax = plt.axes(projection=ccrs.PlateCarree())
-ax.add_feature(cartopy.feature.LAND)
-ax.add_feature(cartopy.feature.OCEAN)
-ax.add_feature(cartopy.feature.COASTLINE, lw=0.5)
+#ax.add_feature(cartopy.feature.LAND)
+#ax.add_feature(cartopy.feature.OCEAN)
+#ax.add_feature(cartopy.feature.COASTLINE, lw=0.5)
 
 ax.set_extent([-150, 60, -25, 60])
+
+from cartopy.feature import NaturalEarthFeature
+
+coast = NaturalEarthFeature(category='physical', scale='10m',
+                            facecolor='none', name='coastline')
+feature = ax.add_feature(coast, edgecolor='black', lw=0.5)
+
 
 fname = "/Users/mdekauwe/Dropbox/ne_10m_admin_1_states_provinces_lines/ne_10m_admin_1_states_provinces_lines.shp"
 shape_feature = ShapelyFeature(Reader(fname).geometries(),
@@ -73,5 +80,6 @@ gl.yformatter = LATITUDE_FORMATTER
 gl.xlocator = mticker.FixedLocator([141, 145,  149, 153])
 gl.ylocator = mticker.FixedLocator([-29, -32, -35, -38])
 
-fig.savefig("aus_map.png", dpi=300, bbox_inches='tight',
+fdir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
+fig.savefig(os.path.join(fdir, "aus_map.png"), dpi=300, bbox_inches='tight',
             pad_inches=0.1)
