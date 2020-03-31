@@ -146,8 +146,8 @@ def get_change_current(fname):
     #plt.show()
 
     # Get baseline period
-    # 2002-2016
-    start_yr = 2002
+    # 2010-2016
+    start_yr = 2010
     end_yr = 2016
     vod_pre = np.zeros((nrows,ncols)) # summer
     vod_count = np.zeros((nrows,ncols))
@@ -160,7 +160,7 @@ def get_change_current(fname):
         data = dfx.vod_day.values
         data = data.reshape(nrows, ncols)
 
-        if year == 2002:
+        if year == 2010:
             bottom, top = np.min(dfx.lat), np.max(dfx.lat)
             left, right = np.min(dfx.lon), np.max(dfx.lon)
             print(top, bottom, left, right)

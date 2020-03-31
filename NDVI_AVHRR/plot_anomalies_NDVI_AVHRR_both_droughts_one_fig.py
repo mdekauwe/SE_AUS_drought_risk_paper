@@ -51,7 +51,7 @@ def main(fname, plot_dir):
 
     # Get baseline period
     # 1993-2016
-    ndvi_pre = calc_average(ds, 1993, 2016)
+    ndvi_pre = calc_average(ds, 2010, 2016)
 
     # Get drought period
     # 2017-2019
@@ -91,7 +91,7 @@ def plot_anomaly(ofname, chg, bottom, top, left, right):
     offset = -0.2
     top = top - offset
     bottom = bottom - offset
-    
+
     fig = plt.figure(figsize=(12, 6))
     plt.rcParams['font.family'] = "sans-serif"
     plt.rcParams['font.size'] = "14"
