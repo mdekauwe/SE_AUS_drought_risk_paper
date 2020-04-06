@@ -138,7 +138,7 @@ if __name__ == "__main__":
     parser.add_option("-p", "--plot_fname", dest="plot_fname", action="store",
                       help="Benchmark plot filename", type="string")
     (options, args) = parser.parse_args()
-
+    
     met_dir = "/Users/mdekauwe/research/OzFlux"
     met_fname = os.path.join(met_dir, "TumbarumbaOzFlux2.0_met.nc")
 
