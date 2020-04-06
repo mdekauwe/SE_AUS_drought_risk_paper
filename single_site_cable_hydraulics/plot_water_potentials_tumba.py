@@ -55,7 +55,7 @@ def main(fname, met_fname, odir):
 
 
     ax1.plot(df.index, df["weighted_psi_soil"], c=colours[0],
-             lw=1.5, ls="-", label="$\Psi$$_{s,weight}$")
+             lw=1.5, ls="-", label="$\Psi$$_{sw}$")
     ax1.plot(df2.index, df2["psi_stem"], c=colours[1],
              lw=1.5, ls="-", label="$\Psi$$_{x}$")
     ax1.plot(df2.index, df2["psi_leaf"], c=colours[2],
@@ -115,6 +115,6 @@ if __name__ == "__main__":
     fname = "outputs/hydraulics_tumba.nc"
     met_dir = "/Users/mdekauwe/research/OzFlux"
     met_fname = os.path.join(met_dir, "TumbarumbaOzFlux2.0_met.nc")
-    #odir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
-    odir = "/Users/mdekauwe/Desktop"
+    odir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
+    #odir = "/Users/mdekauwe/Desktop"
     main(fname, met_fname, odir )
