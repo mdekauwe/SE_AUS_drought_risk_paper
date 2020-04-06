@@ -90,14 +90,13 @@ def get_change_md(fname):
     start_year = 2000
     end_year = 2009
     nyears = (end_year - start_year) + 1
-    vod_dur = np.zeros((nrows,ncols))
+    vod_dur = np.ones((nrows,ncols)) * np.nan
 
 
 
     yr_count = 0
 
     vals = ds.VOD[count,:,:].values
-    vals = np.where(np.isnan(vals), 0.0, vals)
     vod_dur[:,:] = vals
 
     for year in np.arange(start_year, end_year+1):
@@ -108,17 +107,17 @@ def get_change_md(fname):
                 vod_count = np.zeros((nrows,ncols))
 
                 vals = ds.VOD[count,:,:].values
-                vals = np.where(np.isnan(vals), 0.0, vals)
+                #vals = np.where(np.isnan(vals), 0.0, vals)
                 vod_dur[:,:] = np.where(np.logical_and(~np.isnan(vals),
                                         vals < vod_dur), vals, vod_dur)
 
                 vals = ds.VOD[count+1,:,:].values
-                vals = np.where(np.isnan(vals), 0.0, vals)
+                #vals = np.where(np.isnan(vals), 0.0, vals)
                 vod_dur[:,:] = np.where(np.logical_and(~np.isnan(vals),
                                         vals < vod_dur), vals, vod_dur)
 
                 vals = ds.VOD[count+2,:,:].values
-                vals = np.where(np.isnan(vals), 0.0, vals)
+                #vals = np.where(np.isnan(vals), 0.0, vals)
                 vod_dur[:,:] = np.where(np.logical_and(~np.isnan(vals),
                                         vals < vod_dur), vals, vod_dur)
 
@@ -126,9 +125,25 @@ def get_change_md(fname):
             count += 1
         yr_count += 1
 
+
+
+
     vod_dur = np.flipud(vod_dur)
 
-    chg = ((vod_dur - vod_pre) / vod_pre) * 100.0
+
+
+
+
+    diff = np.where(np.absolute(vod_dur - vod_pre < 0.01),
+                    vod_dur - vod_pre, 0.0)
+    diff = np.where(diff == 0.0, np.nan, diff)
+    #plt.imshow(diff )
+    #plt.colorbar()
+    #plt.show()
+    #sys.exit()
+    chg = (diff / vod_pre) * 100.0
+
+    #chg = ((vod_dur - vod_pre) / vod_pre) * 100.0
     print(chg.shape)
     #chg.tofile("md_change.bin")
 
@@ -187,7 +202,7 @@ def get_change_current(fname):
     # 2017-2018
     start_yr = 2017
     end_yr = 2018
-    vod_dro = np.zeros((nrows,ncols)) # summer
+    vod_dro = np.ones((nrows,ncols)) * np.nan
 
     dfx = df[(df.hydro_year == 2017) & (df.season == "DJF")]
     dfx = dfx.sort_values(['lat', 'lon'], ascending=[True, True])
@@ -204,7 +219,7 @@ def get_change_current(fname):
         data = dfx.vod_day.values
         data = data.reshape(nrows, ncols)
 
-        data = np.where(np.isnan(data), 0.0, data)
+        #data = np.where(np.isnan(data), 0.0, data)
 
         vod_dro = np.where(np.logical_and(~np.isnan(data), data < vod_dro),
                             data, vod_dro)
@@ -214,7 +229,11 @@ def get_change_current(fname):
     #plt.colorbar()
     #plt.show()
 
-    chg = ((vod_dro - vod_pre) / vod_pre) * 100.0
+    diff = np.where(np.absolute(vod_dro - vod_pre < 0.01),
+                    vod_dro - vod_pre, 0.0)
+    diff = np.where(diff == 0.0, np.nan, diff)
+
+    chg = (diff / vod_pre) * 100.0
 
     #print(chg.shape)
     #chg.tofile("cd_change.bin")
