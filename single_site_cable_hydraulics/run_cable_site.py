@@ -117,9 +117,9 @@ class RunCable(object):
 
             if self.fwsoil == "hydraulics":
                 if site == "WombatStateForestOzFlux2":
-                    fname = change_iveg(fname, site, 20)
+                    fname = change_iveg(fname, site, 20) # DSF
                 else:
-                    fname = change_iveg(fname, site, 19)
+                    fname = change_iveg(fname, site, 19) # WSF
             elif self.fwsoil == "standard":
                 fname = change_iveg(fname, site, 2)
 
@@ -238,6 +238,7 @@ if __name__ == "__main__":
     ## Tumbarumba
     #
     met_subset = ['TumbarumbaOzFlux2.0_met.nc']
+    
     C = RunCable(met_dir=met_dir, log_dir=log_dir, output_dir=output_dir,
                  restart_dir=restart_dir, aux_dir=aux_dir,
                  namelist_dir=namelist_dir, met_subset=met_subset,
@@ -266,6 +267,7 @@ if __name__ == "__main__":
     #
     ## Wombat
     #
+
     met_subset = ['WombatStateForestOzFlux2.0_met.nc']
     C = RunCable(met_dir=met_dir, log_dir=log_dir, output_dir=output_dir,
                  restart_dir=restart_dir, aux_dir=aux_dir,
