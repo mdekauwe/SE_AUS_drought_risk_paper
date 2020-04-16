@@ -185,7 +185,7 @@ def main(fname1, fname2, fname3, fname4, met_fname1, met_fname2, met_fname3,
     ax3.text(0.67, 0.1, fig_label,
             transform=ax3.transAxes, fontsize=12, verticalalignment='top',
             bbox=props)
-    fig_label = "%s %s" % (next(labels_gen), labelsx[2])
+    fig_label = "%s %s" % (next(labels_gen), labelsx[3])
     ax4.text(0.67, 0.1, fig_label,
             transform=ax4.transAxes, fontsize=12, verticalalignment='top',
             bbox=props)
