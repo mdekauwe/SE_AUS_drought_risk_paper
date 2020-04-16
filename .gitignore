@@ -21,3 +21,10 @@ VOD_LPDR/*.parquet
 *.bin
 CABLE_outputs/Current/*.nc
 CABLE_outputs/Millennium/*.nc
+other_western_sites_cable_hydraulics/outputs/*
+other_western_sites_cable_hydraulics/logs/*
+other_western_sites_cable_hydraulics/namelists/*
+other_western_sites_cable_hydraulics/restart_files/*
+other_western_sites_cable_hydraulics/cable
+other_western_sites_cable_hydraulics/__pycache__/*
+other_western_sites_cable_hydraulics/*.nc
