@@ -124,12 +124,17 @@ class RunCable(object):
                                    lai_dir=self.lai_dir)
 
             if self.fwsoil == "hydraulics":
+                if lat == -30.40 and lon == 151.60:
+                    fname = change_iveg(fname, site, 21) # GRW
                 if lat == -31.10 and lon == 142.50:
                     fname = change_iveg(fname, site, 21) # GRW
                 elif lat == -31.10 and lon == 150.95:
                     fname = change_iveg(fname, site, 22) # SAW
-            elif self.fwsoil == "standard":
-                fname = change_iveg(fname, site, 2)
+                elif lat == -30.00 and lon == 141.40:
+                    fname = change_iveg(fname, site, 22) # SAW
+            else:
+                print("problem")
+                sys.exit()
 
             replace_dict = {
                             "filename%met": "'%s'" % (fname),
@@ -253,7 +258,7 @@ if __name__ == "__main__":
     shutil.move(out_fname, os.path.join(output_dir, "hydraulics_-30.40_151.60.nc"))
 
 
-    """
+    #"""
     met_subset = ['AWAP_single_pixel_-31.10_142.50.nc']
     C = RunCable(met_dir=met_dir, log_dir=log_dir, output_dir=output_dir,
                  restart_dir=restart_dir, aux_dir=aux_dir,
@@ -264,7 +269,7 @@ if __name__ == "__main__":
 
     out_fname = os.path.join(output_dir, "AWAP_pixel_out.nc")
     shutil.move(out_fname, os.path.join(output_dir, "hydraulics_-31.10_142.50.nc"))
-    
+
 
     met_subset = ['AWAP_single_pixel_-31.10_150.95.nc']
     C = RunCable(met_dir=met_dir, log_dir=log_dir, output_dir=output_dir,
@@ -276,4 +281,17 @@ if __name__ == "__main__":
 
     out_fname = os.path.join(output_dir, "AWAP_pixel_out.nc")
     shutil.move(out_fname, os.path.join(output_dir, "hydraulics_-31.10_150.95.nc"))
-    """
+
+
+    met_subset = ['AWAP_single_pixel_-31.10_150.95.nc']
+    C = RunCable(met_dir=met_dir, log_dir=log_dir, output_dir=output_dir,
+                 restart_dir=restart_dir, aux_dir=aux_dir,
+                 namelist_dir=namelist_dir, met_subset=met_subset,
+                 cable_src=cable_src, mpi=mpi, num_cores=num_cores,
+                 fwsoil="hydraulics")
+    C.main()
+
+    out_fname = os.path.join(output_dir, "AWAP_pixel_out.nc")
+    shutil.move(out_fname, os.path.join(output_dir, "hydraulics_-30.00_141.40.nc"))
+
+    #"""
