@@ -172,8 +172,10 @@ if __name__ == "__main__":
 
     plot_dir = "/Users/mdekauwe/Dropbox/Drought_risk_paper/figures/figs"
 
-    md_fname = "../CABLE_outputs/Millennium/all_yrs_CMI.nc"
-    cd_fname = "../CABLE_outputs/Current/all_yrs_CMI.nc"
+    #md_fname = "../CABLE_outputs/Millennium/all_yrs_CMI.nc"
+    #cd_fname = "../CABLE_outputs/Current/all_yrs_CMI.nc"
+    md_fname = "/Users/mdekauwe/research/drought_desktop/Drought/outputs/all_yrs_CMI.nc"
+    cd_fname = "/Users/mdekauwe/research/drought_desktop/current/outputs/all_yrs_CMI.nc"
     (cmi_md, bottom, top, left, right) = calc_p_minus_aet(md_fname, 2000, 2009)
     (cmi_cd, bottom, top, left, right) = calc_p_minus_aet(cd_fname, 2017, 2019)
 
