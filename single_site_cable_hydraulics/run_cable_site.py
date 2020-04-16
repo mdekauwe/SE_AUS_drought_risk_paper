@@ -140,6 +140,7 @@ class RunCable(object):
                             "cable_user%or_evap": ".FALSE.",
                             "redistrb": ".FALSE.",
                             "spinup": ".TRUE.",
+                            "cable_user%litter": ".TRUE.",
                             "cable_user%FWSOIL_SWITCH": "'%s'" % (self.fwsoil),
             }
             adjust_nml_file(nml_fname, replace_dict)
@@ -238,7 +239,7 @@ if __name__ == "__main__":
     ## Tumbarumba
     #
     met_subset = ['TumbarumbaOzFlux2.0_met.nc']
-    
+
     C = RunCable(met_dir=met_dir, log_dir=log_dir, output_dir=output_dir,
                  restart_dir=restart_dir, aux_dir=aux_dir,
                  namelist_dir=namelist_dir, met_subset=met_subset,
