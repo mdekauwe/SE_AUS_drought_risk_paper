@@ -112,6 +112,7 @@ def plot_drought(prior, during, ofname, bottom, top, left, right):
                     cbar_size='5%',
                     label_mode='')  # note the empty label_mode
 
+
     data = [prior, during-prior]
     fig_labels = ["(a)", "(b)"]
 
@@ -153,7 +154,7 @@ def plot_map(ax, var, cmap, i, top, bottom, left, right, fig_label, num=0):
     if num == 0:
         vmin, vmax = -1600, 1600
     else:
-        vmin, vmax = -180, 180
+        vmin, vmax = -400, 400
     #top, bottom = 89.8, -89.8
     #left, right = 0, 359.8
     img = ax.imshow(var, origin='lower',
